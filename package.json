@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "PRIVET FILIPP",
   "main": "main.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon ./server/main.js"
   },
@@ -13,6 +14,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "fastreport-cloud-sdk": "github:FastReports/FastReport-Cloud-JS",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.7"
   }

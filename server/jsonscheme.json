@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Image List",
+    "description": "Список изображений",
+    "type": "object",
+    "properties": {
+      "images": {
+        "description": "Массив изображений",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "Уникальный идентификатор изображения",
+              "type": "integer"
+            },
+            "title": {
+              "description": "Название изображения",
+              "type": "string"
+            },
+            "url": {
+              "description": "URL изображения",
+              "type": "string",
+              "format": "uri"
+            },
+            "description": {
+              "description": "Описание изображения",
+              "type": "string"
+            }
+          },
+          "required": ["id", "title", "url", "description"]
+        }
+      }
+    },
+    "required": ["images"]
+  }

@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="11/29/2024 20:59:45" ReportInfo.Modified="11/30/2024 09:53:52" ReportInfo.CreatorVersion="2020.4.0.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+namespace FastReport
+{
+  public class ReportScript
+    { 
+
+ 
+    
+
+    private void Table1_BeforePrint(object sender, EventArgs e)
+    {
+      // Получаем источник данных &quot;images&quot;
+      DataSourceBase ds = Report.GetDataSource(&quot;images&quot;);
+      ds.Init();
+
+      // Находим таблицу в отчете
+      TableObject table = Report.FindObject(&quot;Table1&quot;) as TableObject;
+
+      if (table != null)
+      {
+        int rowIndex = 1; // Начинаем заполнять со второй строки (первая — заголовок)
+
+        while (ds.HasMoreRows)
+        {
+          // Получаем данные из текущей записи
+          int id = (int)Report.GetColumnValue(&quot;images.id&quot;);
+          string title = (string)Report.GetColumnValue(&quot;images.title&quot;);
+          string url = (string)Report.GetColumnValue(&quot;images.url&quot;);
+          string description = (string)Report.GetColumnValue(&quot;images.description&quot;);
+
+          // Добавляем новую строку
+          table.RowCount++;
+
+          // Заполняем столбцы строки
+          table[rowIndex, 0].Text = id.ToString();          // ID
+          table[rowIndex, 1].Text = title;                  // Title
+          table[rowIndex, 3].Text = description;            // Description
+
+          // Добавляем изображение в ячейку
+          PictureObject picture = new PictureObject();
+          picture.ImageLocation = url;
+          picture.Bounds = new RectangleF(0, 0, table.Columns[2].Width, table.Rows[rowIndex].Height);
+          table[rowIndex, 2].Objects.Add(picture);          // URL
+
+          // Переходим к следующей записи
+          ds.Next();
+          rowIndex++;
+        }
+      } 
+    }
+
+    
+    
+  }       
+}
+</ScriptText>
+  <Dictionary>
+    <JsonDataSourceConnection Name="Connection" ConnectionString="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">
+      <JsonTableDataSource Name="JSON" DataType="FastReport.Data.JsonConnection.JsonParser.JsonArray" Enabled="true" TableName="JSON">
+        <Column Name="index" DataType="System.Int32"/>
+        <Column Name="item" DataType="FastReport.JsonBase">
+          <JsonTableDataSource Name="images" DataType="FastReport.JsonBase" Enabled="true">
+            <Column Name="index" DataType="System.Int32"/>
+            <Column Name="item" DataType="FastReport.JsonBase">
+              <Column Name="id" DataType="System.Double"/>
+              <Column Name="title" DataType="System.String"/>
+              <Column Name="url" DataType="System.String"/>
+              <Column Name="description" DataType="System.String"/>
+            </Column>
+            <Column Name="array" DataType="FastReport.JsonBase"/>
+          </JsonTableDataSource>
+        </Column>
+        <Column Name="array" DataType="FastReport.JsonBase"/>
+      </JsonTableDataSource>
+    </JsonDataSourceConnection>
+    <Parameter Name="Parameter" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="Arial, 60pt" StartPageEvent="Page1_StartPage">
+    <DataBand Name="Data1" Width="718.2" Height="756" DataSource="images" RowCount="12" MaxRows="10">
+      <TextObject Name="Text1" Left="103.95" Top="378" Width="141.75" Height="18.9" Text="[images.Parameter]" Font="Arial, 10pt"/>
+      <TextObject Name="Text2" Left="113.4" Top="292.95" Width="94.5" Height="18.9" Text="Привет" Font="Arial, 10pt"/>
+    </DataBand>
+  </ReportPage>
+</Report>
