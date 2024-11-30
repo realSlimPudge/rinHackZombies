@@ -1,0 +1,128 @@
+.content {
+	width: 80%;
+	height: 100%;
+	border-top-left-radius: 20px;
+	border-bottom-left-radius: 20px;
+	border: 1px solid var(--black);
+	background: white;
+	transition: 300ms border ease;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+}
+.overlay {
+	position: absolute;
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+	background: rgba($color: black, $alpha: 0.7);
+}
+.container {
+	width: 700px;
+	height: 80%;
+	position: relative;
+	color: var(--black);
+	.width {
+		position: absolute;
+		transform: translate(-50%, -100%);
+		top: 0;
+		left: 50%;
+
+		font-size: 24px;
+	}
+	.height {
+		position: absolute;
+		transform: translateX(-100%);
+		left: 5%;
+		top: 50%;
+
+		font-size: 24px;
+	}
+}
+
+.paper {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+	background: rgb(254, 232, 232);
+	box-shadow: 0px 0px 20px rgba($color: #000000, $alpha: 0.3);
+}
+.img {
+	background: var(--white);
+}
+.pattern {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.list {
+	display: flex;
+	flex-direction: column;
+	row-gap: 16px;
+	padding: 20px;
+	width: 140px;
+	height: 90%;
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+	background: rgba($color: #000000, $alpha: 0.3);
+	position: absolute;
+	right: 0;
+	transform: translateX(100%);
+	transition: 500ms ease transform;
+	overflow: auto;
+	overflow-x: hidden;
+}
+.animation {
+	width: 100px;
+	height: 80px;
+	transition: 300ms ease all;
+	&:hover {
+		transform: translateX(-10%);
+	}
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	div {
+		overflow: hidden;
+		width: 100%;
+		height: 100%;
+		border-radius: 10px;
+		transition: 300ms ease all;
+	}
+	&:hover .delete {
+		opacity: 1;
+	}
+}
+.active {
+	transform: translateX(0%);
+}
+.delete {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	opacity: 0;
+	transition: 300ms ease all;
+	top: 0%;
+	left: 100%;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	border: none;
+	outline: none;
+	cursor: pointer;
+
+	&:hover {
+		svg path {
+			fill: red;
+		}
+	}
+
+	svg {
+		width: 100%;
+		height: 100%;
+	}
+}

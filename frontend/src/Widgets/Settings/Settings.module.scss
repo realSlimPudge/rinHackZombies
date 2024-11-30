@@ -1,0 +1,157 @@
+input[type='number'] {
+	-moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+}
+
+.content {
+	width: 20%;
+	height: 100%;
+	border-top-right-radius: 20px;
+	border-bottom-right-radius: 20px;
+	transition: 300ms ease border;
+	padding: 24px 12px;
+	background: var(--red);
+	p {
+		font-size: 32px;
+		font-weight: 500;
+		color: var(--white);
+		text-align: center;
+		margin-bottom: 30px;
+	}
+}
+.settings {
+	display: flex;
+	flex-direction: column;
+	row-gap: 24px;
+}
+.size {
+	display: flex;
+	width: 90%;
+	margin: 0 auto;
+	justify-content: space-between;
+}
+.width,
+.height {
+	width: 45%;
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	row-gap: 4px;
+	label {
+		font-size: 16px;
+		color: var(--white);
+		font-weight: 400;
+		text-align: start;
+	}
+	input {
+		border-radius: 8px;
+		height: 40px;
+		font-size: 18px;
+		border: none;
+		outline: none;
+		padding: 4px 8px;
+		background: var(--white);
+	}
+}
+.separator {
+	background: rgba($color: white, $alpha: 0.6);
+	height: 1px;
+	width: 90%;
+	margin: 0 auto;
+}
+.columns {
+	div {
+		width: 45%;
+		display: flex;
+		flex-direction: column;
+		row-gap: 4px;
+	}
+	display: flex;
+	align-items: center;
+	width: 90%;
+	margin: 0 auto;
+	justify-content: space-between;
+
+	label {
+		font-size: 16px;
+		color: var(--white);
+		font-weight: 400;
+	}
+	input {
+		border-radius: 8px;
+		height: 40px;
+		font-size: 18px;
+		border: none;
+		outline: none;
+		padding: 4px 8px;
+		background: var(--white);
+	}
+}
+.color {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	row-gap: 4px;
+	width: 45%;
+
+	label {
+		font-size: 16px;
+		color: var(--white);
+		font-weight: 400;
+	}
+
+	input[type='color'] {
+		background: var(--white);
+		border-radius: 8px; /* Круглый цветной элемент */
+		width: 100%; /* Установите желаемую ширину */
+		height: 40px; /* Установите желаемую высоту */
+		padding: 6px; /* Уберите отступы */
+		border: none; /* Уберите границу */
+		outline: none; /* Уберите контур при фокусе */
+		cursor: pointer; /* Измените курсор на указатель */
+	}
+}
+.image {
+	width: 90%;
+	margin: 0 auto;
+	button {
+		width: 100%;
+		padding: 10px 8px;
+		border-radius: 8px;
+		font-size: 22px;
+		border: none;
+		outline: none;
+		cursor: pointer;
+		background: var(--black);
+		color: var(--white);
+		transition: 300ms ease all;
+		font-weight: 500;
+
+		&:hover {
+			background: rgb(38, 38, 38);
+		}
+	}
+}
+.orientation {
+	width: fit-content;
+	margin: 0 auto;
+	font-size: 18px;
+	button {
+		background: var(--white);
+		padding: 8px 12px;
+		border-radius: 8px;
+		border: none;
+		outline: none;
+		font-weight: 400;
+		cursor: pointer;
+		transition: 300ms ease all;
+
+		&:hover {
+			background: rgb(235, 234, 234);
+		}
+	}
+}

@@ -1,0 +1,48 @@
+.container {
+	background: var(--black);
+	height: 100vh;
+	display: flex;
+	align-items: center;
+}
+.content {
+	width: 90%;
+	height: 70%;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	row-gap: 32px;
+
+	p {
+		font-size: 64px;
+		font-weight: 600;
+		color: var(--white);
+	}
+}
+.instruments {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	column-gap: 4px;
+	.separator {
+		height: 100%;
+		width: 20px;
+		display: flex;
+		flex-direction: row-reverse;
+		justify-content: space-between;
+		background: var(--red);
+
+		div {
+			height: 100%;
+			background: var(--red);
+		}
+		> div:first-child {
+			width: 5px;
+		}
+		> div:nth-child(2) {
+			width: 3px;
+		}
+		> div:nth-child(3) {
+			width: 1px;
+		}
+	}
+}
