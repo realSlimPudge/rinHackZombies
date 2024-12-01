@@ -9,6 +9,7 @@ interface SettingsState {
 	strokeColor: string
 	images: string[]
 	orientation: boolean
+	pattern: 'row' | 'column' | 'diagonal' | 'anti-diagonal' | 'cyclic'
 }
 
 const initialState: SettingsState = {
@@ -20,6 +21,7 @@ const initialState: SettingsState = {
 	strokeColor: '#000000',
 	images: [],
 	orientation: false,
+	pattern: 'cyclic',
 }
 
 const settingsSlice = createSlice({
@@ -53,6 +55,14 @@ const settingsSlice = createSlice({
 		setOrientation: (state, action: PayloadAction<boolean>) => {
 			state.orientation = action.payload
 		},
+		setPattern: (
+			state,
+			action: PayloadAction<
+				'row' | 'column' | 'diagonal' | 'anti-diagonal' | 'cyclic'
+			>
+		) => {
+			state.pattern = action.payload
+		},
 	},
 })
 
@@ -66,5 +76,6 @@ export const {
 	addImage,
 	removeImage,
 	setOrientation,
+	setPattern,
 } = settingsSlice.actions
 export default settingsSlice.reducer

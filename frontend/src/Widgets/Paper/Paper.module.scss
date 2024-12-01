@@ -12,6 +12,77 @@
 	align-items: center;
 	position: relative;
 }
+.slider {
+	position: absolute;
+	transform: rotate(-90deg) translateY(-50%);
+	top: 45%;
+	left: -8%;
+	width: 300px;
+	z-index: 3;
+
+	input {
+		width: 100%;
+
+		&::-webkit-slider-runnable-track {
+			width: 100%;
+			height: 8px;
+			background: #ddd;
+			border-radius: 4px;
+		}
+
+		&::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 20px;
+			height: 20px;
+			background: red;
+			border-radius: 50%;
+			cursor: pointer;
+			margin-top: -6px;
+		}
+
+		&::-moz-range-track {
+			width: 100%;
+			height: 8px;
+			background: #ddd;
+			border-radius: 4px;
+		}
+
+		&::-moz-range-thumb {
+			width: 10px;
+			height: 20px;
+			background: var(--red);
+			cursor: pointer;
+		}
+
+		&::-ms-track {
+			width: 100%;
+			height: 8px;
+			background: transparent;
+			border-color: transparent;
+			color: transparent;
+		}
+
+		&::-ms-fill-lower {
+			background: #ddd;
+			border-radius: 4px;
+		}
+
+		&::-ms-fill-upper {
+			background: red;
+			border-radius: 4px;
+		}
+
+		&::-ms-thumb {
+			width: 20px;
+			height: 20px;
+			background: #007bff;
+			border-radius: 50%;
+			cursor: pointer;
+			margin-top: 0;
+		}
+	}
+}
 .overlay {
 	position: absolute;
 	z-index: 2;
@@ -27,17 +98,15 @@
 	.width {
 		position: absolute;
 		transform: translate(-50%, -100%);
-		top: 0;
+		top: -5%;
 		left: 50%;
-
 		font-size: 24px;
 	}
 	.height {
 		position: absolute;
-		transform: translateX(-100%);
-		left: 5%;
+		transform: translateX(-100%) translateY(-50%);
+		left: -5%;
 		top: 50%;
-
 		font-size: 24px;
 	}
 }
@@ -64,14 +133,14 @@
 	row-gap: 16px;
 	padding: 20px;
 	width: 140px;
-	height: 90%;
+	height: fit-content;
 	border-top-left-radius: 15px;
 	border-bottom-left-radius: 15px;
-	background: rgba($color: #000000, $alpha: 0.3);
+	background: rgba($color: red, $alpha: 0.3);
 	position: absolute;
 	right: 0;
 	transform: translateX(100%);
-	transition: 500ms ease transform;
+	transition: 500ms ease all;
 	overflow: auto;
 	overflow-x: hidden;
 }

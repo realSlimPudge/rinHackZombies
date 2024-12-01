@@ -1,6 +1,6 @@
 .container {
 	background: var(--black);
-	height: 100vh;
+	height: 115vh;
 	display: flex;
 	align-items: center;
 }
@@ -29,7 +29,7 @@
 		display: flex;
 		flex-direction: row-reverse;
 		justify-content: space-between;
-		background: var(--red);
+		background: var(--brown);
 
 		div {
 			height: 100%;
@@ -44,5 +44,23 @@
 		> div:nth-child(3) {
 			width: 1px;
 		}
+	}
+}
+
+.send {
+	border: none;
+	outline: none;
+	width: 200px;
+	margin: 0 auto;
+	font-size: 32px;
+	padding: 16px 20px;
+	border-radius: 15px;
+	cursor: pointer;
+	background: var(--red);
+	color: var(--white);
+	transition: 300ms all ease;
+
+	&:hover {
+		background: var(--brown);
 	}
 }

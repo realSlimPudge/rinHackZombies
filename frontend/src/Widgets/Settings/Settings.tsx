@@ -11,6 +11,7 @@ import {
 	setStrokeColor,
 	addImage,
 	setOrientation,
+	setPattern,
 } from '../../store/features/settingsSlice'
 
 const Settings: React.FC = () => {
@@ -19,6 +20,7 @@ const Settings: React.FC = () => {
 	const columns = useSelector((state: RootState) => state.settings.columns)
 	const rows = useSelector((state: RootState) => state.settings.rows)
 	const stroke = useSelector((state: RootState) => state.settings.strokeWidth)
+	const pattern = useSelector((state: RootState) => state.settings.pattern)
 	const orientation = useSelector(
 		(state: RootState) => state.settings.orientation
 	)
@@ -76,6 +78,18 @@ const Settings: React.FC = () => {
 	}
 	const changeOrientation = () => {
 		dispatch(setOrientation(!orientation))
+	}
+	const changePattern = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		dispatch(
+			setPattern(
+				e.target.value as
+					| 'row'
+					| 'column'
+					| 'diagonal'
+					| 'anti-diagonal'
+					| 'cyclic'
+			)
+		)
 	}
 	const readFile = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const files = e.target.files
@@ -171,6 +185,17 @@ const Settings: React.FC = () => {
 					</div>
 				</div>
 				<div className={styles.separator}></div>
+				<div className={styles.pattern}>
+					<label></label>
+					<select value={pattern} onChange={changePattern}>
+						<option value='cyclic'>Циклический</option>
+						<option value='row'>По строкам</option>
+						<option value='column'>По столбцам</option>
+						<option value='diagonal'>Диагональный</option>
+						<option value='anti-diagonal'>Анти-диагональный</option>
+					</select>
+				</div>
+				<div className={styles.separator}></div>
 				<div className={styles.image}>
 					<input
 						type='file'
@@ -182,6 +207,7 @@ const Settings: React.FC = () => {
 					/>
 					<button onClick={btnClick}>Загрузить фотографии</button>
 				</div>
+
 				<div className={styles.orientation}>
 					<button onClick={changeOrientation}>
 						Поменять ориентацию

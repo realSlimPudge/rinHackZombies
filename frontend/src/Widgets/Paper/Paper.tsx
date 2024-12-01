@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './Paper.module.scss'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
+import { useSelector, useDispatch } from 'react-redux'
+import RootState from '../../store/store'
 import { removeImage } from '../../store/features/settingsSlice'
-import { useDispatch } from 'react-redux'
 
 const Paper: React.FC = () => {
 	const width = useSelector((state: RootState) => state.settings.width)
@@ -11,6 +10,8 @@ const Paper: React.FC = () => {
 	const columns = useSelector((state: RootState) => state.settings.columns)
 	const rows = useSelector((state: RootState) => state.settings.rows)
 	const images = useSelector((state: RootState) => state.settings.images)
+	const pattern = useSelector((state: RootState) => state.settings.pattern)
+	const [scale, setScale] = useState<number>(5)
 	const dispatch = useDispatch()
 	const strokeWidth = useSelector(
 		(state: RootState) => state.settings.strokeWidth
@@ -21,10 +22,156 @@ const Paper: React.FC = () => {
 	const deleteImg = (i: number) => {
 		dispatch(removeImage(i))
 	}
+
+	useEffect(() => {
+		console.log(scale)
+	}, [scale])
+
+	const renderPattern = (cellIndex: number) => {
+		const imageIndex = cellIndex % images.length
+		switch (pattern) {
+			case 'cyclic':
+				return (
+					<div key={cellIndex} className={styles.img}>
+						{images[imageIndex] && (
+							<div
+								className={styles.backPattern}
+								style={{
+									backgroundImage: `url(${images[imageIndex]})`,
+									backgroundSize: 'cover',
+									backgroundPosition: 'center',
+									width: '100%',
+									height: '100%',
+								}}
+							></div>
+						)}
+					</div>
+				)
+			case 'row':
+				return (
+					<div key={cellIndex} className={styles.img}>
+						{images[
+							Math.floor(cellIndex / columns) % images.length
+						] && (
+							<div
+								className={styles.backPattern}
+								style={{
+									backgroundImage: `url(${
+										images[
+											Math.floor(cellIndex / columns) %
+												images.length
+										]
+									})`,
+									backgroundSize: 'cover',
+									backgroundPosition: 'center',
+									width: '100%',
+									height: '100%',
+								}}
+							></div>
+						)}
+					</div>
+				)
+			case 'column':
+				return (
+					<div key={cellIndex} className={styles.img}>
+						{images[
+							Math.floor(cellIndex % columns) % images.length
+						] && (
+							<div
+								className={styles.backPattern}
+								style={{
+									backgroundImage: `url(${
+										images[
+											Math.floor(cellIndex % columns) %
+												images.length
+										]
+									})`,
+									backgroundSize: 'cover',
+									backgroundPosition: 'center',
+									width: '100%',
+									height: '100%',
+								}}
+							></div>
+						)}
+					</div>
+				)
+			case 'diagonal':
+				return (
+					<div key={cellIndex} className={styles.img}>
+						{images[
+							((cellIndex % columns) +
+								Math.floor(cellIndex / rows)) %
+								images.length
+						] && (
+							<div
+								className={styles.backPattern}
+								style={{
+									backgroundImage: `url(${
+										images[
+											((cellIndex % columns) +
+												Math.floor(cellIndex / rows)) %
+												images.length
+										]
+									})`,
+									backgroundSize: 'cover',
+									backgroundPosition: 'center',
+									width: '100%',
+									height: '100%',
+								}}
+							></div>
+						)}
+					</div>
+				)
+			case 'anti-diagonal':
+				return (
+					<div key={cellIndex} className={styles.img}>
+						{images[
+							((cellIndex % columns) +
+								(rows - 1 - Math.floor(cellIndex / rows))) %
+								images.length
+						] && (
+							<div
+								className={styles.backPattern}
+								style={{
+									backgroundImage: `url(${
+										images[
+											((cellIndex % columns) +
+												(rows -
+													1 -
+													Math.floor(
+														cellIndex / rows
+													))) %
+												images.length
+										]
+									})`,
+									backgroundSize: 'cover',
+									backgroundPosition: 'center',
+									width: '100%',
+									height: '100%',
+								}}
+							></div>
+						)}
+					</div>
+				)
+			default:
+				return null
+		}
+	}
+
 	return (
 		<div className={styles.content}>
+			<div className={styles.slider}>
+				<input
+					type='range'
+					value={scale * 10}
+					onChange={e => {
+						setScale(Number(e.target.value) / 10)
+					}}
+					min={10}
+					max={100}
+				/>
+			</div>
 			<div className={styles.container}>
-				<div className={styles.width}>{width} см</div>
 				<div
 					className={styles.paper}
 					style={{
@@ -35,38 +182,16 @@ const Paper: React.FC = () => {
 						display: 'grid',
 						gridTemplateColumns: `repeat(${columns},1fr)`,
 						gridTemplateRows: `repeat(${rows},1fr)`,
-						width: `calc(5px * ${width})`,
-						height: `calc(5px * ${height})`,
+						width: `calc(${scale}px * ${width})`,
+						height: `calc(${scale}px * ${height})`,
 					}}
 				>
+					<div className={styles.width}>{width} см</div>
 					{Array.from({ length: columns * rows }).map(
-						(_, cellIndex) => {
-							const imageIndex = cellIndex % images.length
-							return (
-								<div
-									key={cellIndex}
-									className={styles.img}
-									// style={{
-									// 	width: `${(width * 5) / columns} px`,
-									// 	height: `${(height * 5) / rows} px`,
-									// }}
-								>
-									{images[imageIndex] && (
-										<img
-											src={images[imageIndex]}
-											alt={`Uploaded ${imageIndex}`}
-											className={styles.pattern}
-										/>
-									)}
-									{/* {(width * 5) / columns - strokeWidth}
-									<br />
-									{(height * 5) / rows - strokeWidth} */}
-								</div>
-							)
-						}
+						(_, cellIndex) => renderPattern(cellIndex)
 					)}
+					<div className={styles.height}>{height} см</div>
 				</div>
-				<div className={styles.height}>{height} см</div>
 			</div>
 			<div
 				className={`${styles.list} ${
