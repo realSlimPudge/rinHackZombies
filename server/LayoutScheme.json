@@ -1,0 +1,1 @@
+{"type":"array","items":{"type":"object","properties":{"column":{"type":"integer"},"row":{"type":"integer"},"height":{"type":"integer"},"width":{"type":"integer"},"pattern":{"type":"string"},"padding":{"type":"integer"},"orientation":{"type":"boolean"},"backgroundColor":{"type":"string"}}}}

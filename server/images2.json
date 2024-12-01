@@ -1,0 +1,22 @@
+{
+    "images": [
+      {
+        "id": 1,
+        "title": "Первое изображение",
+        "url": "https://ru.freepik.com/free-photo/vertical-greyscale-closeup-shot-black-cat-with-cute-eyes_12045474.htm#fromView=keyword&page=1&position=0&uuid=51a3db68-27ae-4339-ad30-cc4cdde40407",
+        "description": "Это первое изображение в списке."
+      },
+      {
+        "id": 2,
+        "title": "Второе изображение",
+        "url": "https://ru.freepik.com/free-photo/black-cat-with-yellow-eyes-looking-camera-with-blurred_7810616.htm#fromView=keyword&page=1&position=6&uuid=51a3db68-27ae-4339-ad30-cc4cdde40407",
+        "description": "Это второе изображение в списке."
+      },
+      {
+        "id": 3,
+        "title": "Третье изображение",
+        "url": "https://ru.freepik.com/free-photo/vertical-selective-focus-shot-black-cat-its-reflection-windowsill_13962935.htm#fromView=keyword&page=1&position=9&uuid=51a3db68-27ae-4339-ad30-cc4cdde40407",
+        "description": "Это третье изображение в списке."
+      }
+    ]
+  }

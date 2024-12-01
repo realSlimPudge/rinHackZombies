@@ -1,0 +1,12 @@
+[
+    {
+        "column": 2,
+        "row": 3,
+        "height": 700,
+        "width": 840,
+        "pattern": "grid",
+        "padding": 10,
+        "orientation": false,
+        "backgroundColor": "#FFFFFF"
+      }
+]

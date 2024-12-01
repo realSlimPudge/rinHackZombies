@@ -1,0 +1,23 @@
+{
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Уникальный идентификатор изображения"
+        },
+        "image": {
+          "type": "string",
+          "format": "base64",
+          "description": "Изображение, закодированное в формате Base64"
+        },
+        "description": {
+          "type": "string",
+          "description": "Описание изображения"
+        }
+      },
+      "required": ["id", "image", "description"]
+    }
+  }
+  

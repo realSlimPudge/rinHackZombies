@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" StartReportEvent="_StartReport" ReportInfo.Created="11/30/2024 16:08:44" ReportInfo.Modified="12/01/2024 03:08:44" ReportInfo.CreatorVersion="2020.4.0.0">
+  <ScriptText>  using System;
+  using System.Collections;
+  using System.Collections.Generic;
+  using System.ComponentModel;
+  using System.Windows.Forms;
+  using System.Drawing;
+  using System.Data;
+  using FastReport;
+  using FastReport.Data;
+  using FastReport.Dialog;
+  using FastReport.Barcode;
+  using FastReport.Table;
+  using FastReport.Utils;
+namespace FastReport
+{
+  public class ReportScript
+  {
+     
+            
+
+    private void Page1_StartPage(object sender, EventArgs e)
+    {
+      
+      // получаем ссылку на источник данных
+      DataSourceBase ds = Report.GetDataSource(&quot;JSON&quot;);
+      
+      DataSourceBase ds_layout = Report.GetDataSource(&quot;JSON&quot;);
+      if (ds_layout == null)
+      {
+        throw new InvalidOperationException(&quot;Источник данных JSON не найден.&quot;);
+      }
+    
+      // Получаем сам элемент JSON (получаем объект по индексу)
+      JsonBase item = ((JsonBase)Report.GetColumnValue(&quot;JSON.item&quot;));                                       
+      JsonBase parameters =((JsonBase)Report.GetColumnValue(&quot;JSON1.item&quot;));               
+      
+ 
+       
+      int ds_Width;
+      int ds_Height;
+      if (((Boolean)Report.GetColumnValue(&quot;JSON1.item.orientation&quot;)))
+      {
+        ds_Width = ((Int32)Report.GetColumnValue(&quot;JSON1.item.width&quot;));
+        ds_Height = ((Int32)Report.GetColumnValue(&quot;JSON1.item.height&quot;));
+      }
+      else
+      {
+        ds_Height = ((Int32)Report.GetColumnValue(&quot;JSON1.item.width&quot;));
+        ds_Width = ((Int32)Report.GetColumnValue(&quot;JSON1.item.height&quot;));
+      } 
+      
+      
+      
+      
+      // Преобразуем массив в список для удобства добавления элементов
+      List&lt;string&gt; imageLocationsList = new List&lt;string&gt;{};
+
+      while (ds.HasMoreRows)
+      {
+        
+
+        // получаем значение поля для текущей записи источника
+        string imagePath =  ((String)Report.GetColumnValue(&quot;JSON.item.image&quot;));
+                                                              
+        imageLocationsList.Add(imagePath);
+        ds.Next();
+      }                                 
+    
+        
+       
+      
+      // Параметры строк и колонок
+      int rows = ((Int32)Report.GetColumnValue(&quot;JSON1.item.row&quot;));
+      int columns = ((Int32)Report.GetColumnValue(&quot;JSON1.item.column&quot;));
+      
+     
+      
+      //Создаем окно
+      Page1.ReportTitle = new ReportTitleBand();                                            
+      Page1.ReportTitle.Name = &quot;ReportTitle1&quot;;
+      Page1.PaperHeight = ds_Height;
+      Page1.PaperWidth = ds_Width;
+      
+      
+      // Размеры страницы (A4)
+      float pageHeight = Units.Millimeters * ds_Height;
+      float pageWidth = Units.Millimeters * ds_Width;
+      ShapeObject shape1 = new ShapeObject();
+                                                                                            
+      
+      // Создаем фигуру для заливки заднего фона
+      shape1.Width = pageWidth;
+      shape1.Height = pageHeight;
+      
+      // Переводим цвет из HEX
+      Color beigeColor = ColorTranslator.FromHtml(((String)Report.GetColumnValue(&quot;JSON1.item.backgroundColor&quot;)));
+      shape1.FillColor = beigeColor;
+      Page1.ReportTitle.Objects.Add(shape1);
+      
+      
+      
+      // Вычисляем размеры ячейки
+      float cellWidth = pageWidth  / columns;
+      float cellHeight = pageHeight / rows;
+      
+      //Паттерны расположения
+     // string pattern = ((String)Report.GetColumnValue(&quot;JSON1.item.pattern&quot;));  // &quot;cyclic&quot;  &quot;row&quot;  &quot;column&quot;  &quot;diagonal&quot;  &quot;anti-diagonal&quot;
+      string pattern = &quot;&quot;;
+      // Добавляем изображения в ячейки
+      for (int row = 0; row &lt; rows; row++)
+      {
+        for (int col = 0; col &lt; columns; col++)
+        {
+          // Выбираем изображение, используя индекс с циклом (для повторения)
+          string imageLocation;
+          switch (pattern)
+          {
+            case &quot;cyclic&quot;:
+              // Циклический паттерн: изображения повторяются по порядку
+              imageLocation = imageLocationsList[(row * columns + col) % imageLocationsList.Count];
+              break;
+
+            case &quot;row&quot;:
+              // Один и тот же набор изображений на каждой строке
+              imageLocation = imageLocationsList[row % imageLocationsList.Count];
+              break;
+
+            case &quot;column&quot;:
+              // Один и тот же набор изображений на каждом столбце
+              imageLocation = imageLocationsList[col % imageLocationsList.Count];
+              break;
+
+            case &quot;diagonal&quot;:
+              // Диагональный паттерн: для каждой диагонали используется одно изображение
+              imageLocation = imageLocationsList[(row + col) % imageLocationsList.Count];
+              break;
+            case &quot;anti-diagonal&quot;:
+              imageLocation = imageLocationsList[(col + row + 1) % imageLocationsList.Count];
+              break;
+            default:
+              // По умолчанию циклический паттерн
+              imageLocation = imageLocationsList[(row * columns + col) % imageLocationsList.Count];
+              break;
+          }
+          
+          // Создаем PictureObject
+          PictureObject picture = new PictureObject();
+          // picture.Name = string.Format(&quot;Picture_{0}_{1}&quot;, row, col);
+
+          picture.ImageLocation = imageLocation;
+          picture.Left = cellWidth * col;
+          picture.Top = cellHeight * row;
+          picture.Width = cellWidth;
+          picture.Height = cellHeight;
+        // picture.DataColumn = ((String)Report.GetColumnValue(&quot;JSON.item.description&quot;));
+          picture.SizeMode = PictureBoxSizeMode.StretchImage;
+          
+          
+          
+          
+          picture.Padding = new Padding(((Int32)Report.GetColumnValue(&quot;JSON1.item.padding&quot;)));
+          //picture.Angle = 270;
+          
+          
+          // Добавляем изображение в ReportTitleBand
+          Page1.ReportTitle.Objects.Add(picture);
+        }
+      }      
+      
+      
+      
+      
+      
+      
+   
+
+    }
+   }
+  }            
+</ScriptText>
+  <Dictionary>
+    <JsonDataSourceConnection Name="Connection1" ConnectionString="rijcmlqQHltKYMWP6ywiEFwtQJHUTIZMQmDarfveos0swwvHCgKqlWB2+yiCKRTa/ff7Z/+0Rlr2eoYdc8fPiB/GFzEpBBH4Qb7gEYptHMx3yx7PqpjiiHmFfbfqgoP+cD1uEx4Ko5CuQHkORQ04gEi2L5MzjrgpCKeMFx5EsM08yd1XSQ54eJ3smrYLhp/UfwvuR61go7ZP3YhUI2qZNCMB38odUp1JhER/tM0ZgDZXNzuQls7Ho/7RmOfwFbDUuB+K5EA0LCDU07ro5oA4vmPDmKnFC4e9K0MScvgmxr/JaIH3Bxsmk7XdQaCyOxQvHwDTxI7Q36N446cncqqbGE3a+nPCXY5byilQ+QSrq2NC8U4ZZ2JG6CXP0bcBRu7nD9Hq9C2h68MUAZolixrcSVOKlZFfJIhreHa//qXkpPqeHUb9usR+boMntqZAv5j15RBe4P6trgYgIbIr0zFM3aRM9uuARsb9iP8D3C+tj/JdvvvgXYg78t9PWOSvL4bIdw0zjtZCBU/ZSRQryePSAC6FKmP50bNrEmZBqVIZpv5R1qjyQdFE8l/DuO7KZD1xlTn1oMwhZaVc1rVqjpHjlrG1D1/CuypOfEj/pRyDGEFX3SanCZaCGDyL0/ouSDQsC7ArSXr6lqmsDvlodVLSAWjkjAv3GHM/QAHSY2+2JobwsNLYP71S7MhZ+UiHMlHtK0JxOc3u5V1qacqMcbnTP1SHSN3ThKj2CKBROuOEJ8H7f870LDHjD0BcObJrOPc9wfLuVH2M2icRWr0OcQVAetAs2evjE9/4DRtLWkXkDCBGvQbTsu0XbEAx72bS2B4bR4TV7GPWIGFHBTiLE0OWcTUVIA98qKAAzCmhep8E/ptw5CqNiM5j0WX6oMy+NSRXEpWIxVS51Oy+VSKmUCyF/1GfrREWi2gqfW1ki6TBaaVbWQPT+rJgi4dA3IN5Xz0a4ztg8QOkBhQDSEjQLPX1ti16FOejg==">
+      <JsonTableDataSource Name="JSON1" DataType="FastReport.Data.JsonConnection.JsonParser.JsonArray" Enabled="true" TableName="JSON">
+        <Column Name="index" DataType="System.Int32"/>
+        <Column Name="item" DataType="FastReport.JsonBase">
+          <Column Name="column" DataType="System.Int32"/>
+          <Column Name="row" DataType="System.Int32"/>
+          <Column Name="height" DataType="System.Int32"/>
+          <Column Name="width" DataType="System.Int32"/>
+          <Column Name="pattern" DataType="System.String"/>
+          <Column Name="padding" DataType="System.Int32"/>
+          <Column Name="orientation" DataType="System.Boolean" BindableControl="CheckBox"/>
+          <Column Name="backgroundColor" DataType="System.String"/>
+        </Column>
+        <Column Name="array" DataType="FastReport.JsonBase"/>
+      </JsonTableDataSource>
+    </JsonDataSourceConnection>
+    <JsonDataSourceConnection Name="Connection" ConnectionString="rijcmlqPjyILZ9lwQcEJ+ypxupQF7nb2oNG3xdaDYdrwmejdXGnHkSiqUIbzQv9+WpVvyjFpxa5jyOeGS+2NoUrnyP8dWXnT6Nm1UdFWu81Lt9gXtpJBQXysPNODlcyfWXz7nIyvX8tu4cKhQ6W8sVDliZs8GSS22d8rdGcMNS3HkrT5YRRD2/Smku05b6VL+9+e//V3EqQUI3fmASt/U/7luehvnzE+nYtRGpM6VDZFaF2oWZUochv92oYckDmMDXxy8BG7x+ZAiwDF7CoYjkUGQydzCGVmeNgkl1jPV8PjPtzvVZB5m0NchLtMZ9JybJxOLwZ5kDEvu2rsvVW7oEIyt6O60dBUxXZOTpAvuABYGhhe0i+sEpTsHQ6nS31oU8S/Ku8kBfKt89e+WTNtg6pCTlAYGEtOZdRcN91vQDuvmCmB780lBu5BY16HMivq/+s1RkTj+Z/2qvbthGKXo9jgfYKXStLbF7ETv3QPv/3pJvj1dzzMy1uQx96jvVE3A+BaXHr9CDGKwGy2h9305FLVBmvY2I9wJ32ML/aW+SW2m0HIHf1+tY4cnVnZtHexu97rySnOE/1PBNXVUlM3i9addCjHrFJFlNDorOGh0EXKddKrtySYuTW2Av7Dw1UnkUTRghkZ/JqM3BzDqfHwo9U2x+YoZIYlc9yhtVAJ1lWkBlNza+H8IdYfQGwAy1RuL+ejhDV6nlp+GePEyCzuD/SLcRkcOHWwHOnpaJZmXZlKjO3focGseEUqqjGl/AsLiu0fWEJidyU0w6bGiVZXcXX+kGRbSJJcNraQIb0nLgjH7rtWdNb+0KIsbCD5HgvxKbVIT6znMiFEOWfrHtUv13FIaeZSHGGMY69JGj3v6a3zf6r9pVg5bi0HMzQU9uPIt1GHhyCagVZSK5Xt7da3oFSoVBsDphvKmqaPqJ0vuMuJAZqhCBYUteWvQZpjBLkKJcpHNFuTHfwYZlSBLO3nBDX11k/Iw==">
+      <JsonTableDataSource Name="JSON" DataType="FastReport.Data.JsonConnection.JsonParser.JsonArray" Enabled="true" TableName="JSON">
+        <Column Name="index" DataType="System.Int32"/>
+        <Column Name="item" DataType="FastReport.JsonBase">
+          <Column Name="id" DataType="System.Double"/>
+          <Column Name="image" DataType="System.String"/>
+          <Column Name="description" DataType="System.String"/>
+        </Column>
+        <Column Name="array" DataType="FastReport.JsonBase"/>
+      </JsonTableDataSource>
+    </JsonDataSourceConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" PaperWidth="700" PaperHeight="840" LeftMargin="0" TopMargin="0" RightMargin="0" BottomMargin="0" Watermark.Font="Arial, 60pt" StartPageEvent="Page1_StartPage">
+    <ReportTitleBand Name="ReportTitle1" Width="2646" Height="37.8"/>
+  </ReportPage>
+</Report>
