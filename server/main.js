@@ -1,50 +1,64 @@
-import express  from 'express';
-import nodemailer  from 'nodemailer';
-import bodyParser  from 'body-parser';
-import cors from 'cors'; //Cross-origin resource sharing
+import express from 'express';
+import nodemailer from 'nodemailer';
+import cors from 'cors';
 import dotenv from 'dotenv';
-import {insertImages} from "./pgs.js"
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import bodyParser from 'body-parser';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 dotenv.config();
 
 const app = express();
 const port = 3000;
-// лимит для парсинга JSON
-app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    credentials: true
+}));
+
+app.options('*', cors());
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    // Handle OPTIONS method
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
 
 const smtp_key = process.env.MAIL_KEY;
-app.use(cors({
-    origin: 'http://127.0.0.1:5500', 
-    methods: ['GET', 'POST'],        
-    allowedHeaders: ['Content-Type'] 
-}));
+console.log(smtp_key);
+
 const transporter = nodemailer.createTransport({
     host: 'smtp.mail.ru',  
     port: 465,  
     secure: true, 
     auth: {
-        user: 'imnomakj@mail.ru',//почта должна быть той же что с примера сниuзу (from: ...) 
-        pass: `${smtp_key}`,  
+        user: 'imnomakj@mail.ru',
+        pass: smtp_key,  
     }
 });
 
-
-
-app.post('/images', (req, res) =>{
-    const { data } = req.body;
-    insertImages(data);
-})
-
-
-
 // Обработка формы
 app.post('/send-email', (req, res) => {
-    const { email} = req.body;
+    const { email, message } = req.body;
 
     const mailOptions = {
         from: 'imnomakj@mail.ru', //почта откуда будут приходить сообщения
-        to: email, //почта куда будут приходить сообщения 
+        to: 'stax1x@bk.ru', //почта куда будут приходить сообщения 
         subject: 'Сообщение от пользователя сайта',
         text: `Сообщение от: ${email}\n\n${message}`
     };
