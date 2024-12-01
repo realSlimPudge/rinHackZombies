@@ -1,0 +1,17 @@
+:root {
+	--black: #111;
+	--red: #d43;
+	--brown: #a82a1c;
+	--white: #fff;
+    --roboto: 'Roboto'
+}
+::selection{
+    background: var(--brown);
+    color: var(--white);
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--roboto);
+}
