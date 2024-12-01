@@ -2,14 +2,15 @@ import React from 'react'
 import styles from './Constructor.module.scss'
 import Paper from '../Paper/Paper'
 import Settings from '../Settings/Settings'
-import { useDispatch } from 'react-redux'
 import useSendSettings from '../Functions/useSendSettings'
+import useSendImages from '../Functions/useSendImages'
 
 const Constructor: React.FC = () => {
-	const dispatch = useDispatch()
 	const sendSettingsToServer = useSendSettings()
+	const sendImagesToServer = useSendImages()
 	const handleSendSettings = () => {
 		sendSettingsToServer()
+		sendImagesToServer()
 	}
 
 	return (
