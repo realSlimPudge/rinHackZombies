@@ -46,7 +46,7 @@ app.post('/send-email', (req, res) => {
     const { email} = req.body;
 
     const mailOptions = {
-        from: 'imnomakj@mail.ru', //почта откуда будут приходить сообщения
+        from: `${mail_mail}`, //почта откуда будут приходить сообщения
         to: email, //почта куда будут приходить сообщения 
         subject: 'Сообщение от пользователя сайта',
         text: `Сообщение от: ${email}\n\n${message}`
